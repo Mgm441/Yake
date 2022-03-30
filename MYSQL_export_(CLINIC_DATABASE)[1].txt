@@ -1,0 +1,132 @@
+Create database Clinic;
+Use Clinic;
+
+CREATE TABLE Patient (
+userId INT NOT NULL PRIMARY KEY,
+email VARCHAR(30) NOT NULL,
+password VARCHAR(20) NOT NULL,
+firstName VARCHAR(50) NOT NULL,
+lastName VARCHAR(50) NOT NULL,
+address VARCHAR(30) NOT NULL,
+phoneNum INT NOT NULL,
+adminId INT NOT NULL);
+
+CREATE TABLE UserProfile (
+age INT NOT NULL,
+patientId INT NOT NULL);
+
+CREATE TABLE Question (
+questionId INT NOT NULL PRIMARY KEY,
+patientName VARCHAR(30) NOT NULL,
+doctorName VARCHAR(30) NOT NULL,
+date DATE NOT NULL,
+question INT NOT NULL,
+answer VARCHAR(50) NOT NULL,
+doctorId INT NOT NULL,
+pageId INT NOT NULL,
+patientId INT NOT NULL);
+
+CREATE TABLE Comment (
+commentId INT NOT NULL PRIMARY KEY,
+comment VARCHAR(50) NOT NULL,
+patientName VARCHAR(30) NOT NULL,
+date DATE NOT NULL,
+pageId INT NOT NULL,
+patientId INT NOT NULL);
+
+CREATE TABLE Appointment (
+appointmentId INT NOT NULL PRIMARY KEY,
+patientName VARCHAR(30) NOT NULL,
+date DATE NOT NULL,
+doctorId INT NOT NULL,
+patientId INT NOT NULL);
+
+CREATE TABLE DoctorProfile (
+xpYears INT NOT NULL,
+age INT NOT NULL,
+email VARCHAR(15) NOT NULL,
+patientId INT NOT NULL,
+doctorId INT NOT NULL);
+
+CREATE TABLE Doctor (
+userId INT NOT NULL PRIMARY KEY,
+firstName VARCHAR(30) NOT NULL,
+lastName VARCHAR(30) NOT NULL,
+address VARCHAR(30) NOT NULL,
+phoneNum INT NOT NULL,
+email VARCHAR(15) NOT NULL,
+password VARCHAR(20) NOT NULL,
+clinicId INT NOT NULL,
+adminId INT NOT NULL,
+pageId INT NOT NULL);
+
+CREATE TABLE Page (
+pageId INT NOT NULL PRIMARY KEY,
+date DATE NOT NULL,
+rate INT NOT NULL,
+doctorName VARCHAR(30) NOT NULL,
+patientId INT NOT NULL,
+visitorId INT NOT NULL);
+
+CREATE TABLE Admin (
+userId INT NOT NULL PRIMARY KEY,
+email VARCHAR(15) NOT NULL,
+password VARCHAR(20) NOT NULL,
+adminName VARCHAR(30) NOT NULL);
+
+CREATE TABLE Clinic (
+clinicId INT NOT NULL PRIMARY KEY,
+clinicName VARCHAR(30) NOT NULL,
+location VARCHAR(30) NOT NULL,
+clinicPhone INT NOT NULL,
+doctorList VARCHAR(45) NOT NULL,
+adminId INT NOT NULL);
+
+CREATE TABLE Visitor (
+visitorId INT NOT NULL PRIMARY KEY,
+adminId INT NOT NULL);
+
+CREATE TABLE Doctor_Consult_Patient (
+patientId INT NOT NULL,
+doctorId INT NOT NULL);
+
+ALTER TABLE Patient ADD CONSTRAINT Patient_adminId_Admin_userId FOREIGN KEY (adminId) REFERENCES Admin(userId);
+
+ALTER TABLE UserProfile ADD CONSTRAINT UserProfile_patientId_Patient_userId FOREIGN KEY (patientId) REFERENCES Patient(userId);
+
+ALTER TABLE Question ADD CONSTRAINT Question_doctorId_Doctor_userId FOREIGN KEY (doctorId) REFERENCES Doctor(userId);
+
+ALTER TABLE Question ADD CONSTRAINT Question_pageId_Page_pageId FOREIGN KEY (pageId) REFERENCES Page(pageId);
+
+ALTER TABLE Question ADD CONSTRAINT Question_patientId_Patient_userId FOREIGN KEY (patientId) REFERENCES Patient(userId);
+
+ALTER TABLE Comment ADD CONSTRAINT Comment_pageId_Page_pageId FOREIGN KEY (pageId) REFERENCES Page(pageId);
+
+ALTER TABLE Comment ADD CONSTRAINT Comment_patientId_Patient_userId FOREIGN KEY (patientId) REFERENCES Patient(userId);
+
+ALTER TABLE Appointment ADD CONSTRAINT Appointment_doctorId_Doctor_userId FOREIGN KEY (doctorId) REFERENCES Doctor(userId);
+
+ALTER TABLE Appointment ADD CONSTRAINT Appointment_patientId_Patient_userId FOREIGN KEY (patientId) REFERENCES Patient(userId);
+
+ALTER TABLE DoctorProfile ADD CONSTRAINT DoctorProfile_patientId_Patient_userId FOREIGN KEY (patientId) REFERENCES Patient(userId);
+
+ALTER TABLE DoctorProfile ADD CONSTRAINT DoctorProfile_doctorId_Doctor_userId FOREIGN KEY (doctorId) REFERENCES Doctor(userId);
+
+ALTER TABLE Doctor ADD CONSTRAINT Doctor_clinicId_Clinic_clinicId FOREIGN KEY (clinicId) REFERENCES Clinic(clinicId);
+
+ALTER TABLE Doctor ADD CONSTRAINT Doctor_adminId_Admin_userId FOREIGN KEY (adminId) REFERENCES Admin(userId);
+
+ALTER TABLE Doctor ADD CONSTRAINT Doctor_pageId_Page_pageId FOREIGN KEY (pageId) REFERENCES Page(pageId);
+
+ALTER TABLE Page ADD CONSTRAINT Page_patientId_Patient_userId FOREIGN KEY (patientId) REFERENCES Patient(userId);
+
+ALTER TABLE Page ADD CONSTRAINT Page_visitorId_Visitor_visitorId FOREIGN KEY (visitorId) REFERENCES Visitor(visitorId);
+
+ALTER TABLE Clinic ADD CONSTRAINT Clinic_adminId_Admin_userId FOREIGN KEY (adminId) REFERENCES Admin(userId);
+
+ALTER TABLE Visitor ADD CONSTRAINT Visitor_adminId_Admin_userId FOREIGN KEY (adminId) REFERENCES Admin(userId);
+
+ALTER TABLE Doctor_Consult_Patient ADD CONSTRAINT Doctor_Consult_Patient_patientId_Patient_userId FOREIGN KEY (patientId) REFERENCES Patient(userId);
+
+ALTER TABLE Doctor_Consult_Patient ADD CONSTRAINT Doctor_Consult_Patient_doctorId_Doctor_userId FOREIGN KEY (doctorId) REFERENCES Doctor(userId);
+
